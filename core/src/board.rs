@@ -1,10 +1,12 @@
 use crate::Piece;
 
-pub struct Board(pub [[Option<Piece>; 4]; 4]);
+const EMPTY_SLOT: Piece = Piece(0b11110000);
+
+pub struct Board(pub [[Piece; 4]; 4]);
 
 impl Board {
     pub fn new() -> Self {
-        Board([[None; 4]; 4])
+        Board([[EMPTY_SLOT; 4]; 4])
     }
 
     pub fn get_piece(&self, x: usize, y: usize) -> Option<Piece> {
@@ -12,7 +14,10 @@ impl Board {
             return None;
         }
 
-        self.0[x][y]
+        match self.0[x][y] {
+            EMPTY_SLOT => None,
+            p => Some(p),
+        }
     }
 
     pub fn set_piece(&mut self, x: usize, y: usize, piece: Option<Piece>) {
@@ -20,7 +25,10 @@ impl Board {
             return;
         }
 
-        self.0[x][y] = piece;
+        self.0[x][y] = match piece {
+            Some(p) => p,
+            None => EMPTY_SLOT,
+        };
     }
 }
 
