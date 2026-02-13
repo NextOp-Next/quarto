@@ -1,33 +1,77 @@
 use std::io::{Read, stdin};
 
-use quarto_core::Piece;
+use quarto_core::{Board, Piece};
 
 use crate::ordi::Player;
 
 pub struct Human {
-    buff: [u8; 64],
+    buff: String,
 }
 
 impl Player for Human {
-    fn give_piece_to_other_player(&mut self) -> Piece {
+    fn give_piece_to_other_player(&mut self, board: &Board) -> Piece {
         loop {
-            let success = stdin().read(&mut self.buff);
+            self.buff.clear();
+            let success = stdin().read_line(&mut self.buff);
             match success {
-                Ok(_) => todo!(),
+                Ok(_) => {
+                    if self.buff == "help" {
+                        println!("Type the piece you wish to give your opponent, represented by a 4 character long input.\nFormat :\nt/s (tall / small)\nb/w (black / white)\nh/f (hollow / full)\ns/c (square / circle)\n\nExample : tbhs, wsfs.\n");
+                        continue
+                    }
+                },
                 Err(_) => continue,
             }
         }
-        Piece(0)
     }
 
-    fn play_piece(&mut self) -> u8 {
+    fn play_piece(&mut self, board: &Board, given_piece: &Piece) -> (usize, usize) {
+        println!("Type the coordinates you wish to place your piece ({given_piece}) in.");
         loop {
-            let success = stdin().read(&mut self.buff);
+            self.buff.clear();
+            let success = stdin().read_line(&mut self.buff);
             match success {
-                Ok(_) => todo!(),
-                Err(_) => continue,
+                Ok(_) => {
+                    if self.buff == "help" {
+                        println!("Coordinates are in the x,y or x, y format.\n");
+                        continue
+                    }
+
+                    let x_res = self.buff[..=1].parse::<usize>();
+                    let y_res = self.buff[2..].parse::<usize>();
+
+                    match x_res {
+                        Ok(x) => match y_res {
+                            Ok(y) => {
+                                if x >= 4 || y >= 4 {
+                                    println!("Coordinates ({x}, {y}) are out of bounds. Please try again.");
+                                    continue
+                                }
+
+                                let piece_at_pos = board.get_piece(x, y);
+                                if piece_at_pos.is_some() {
+                                    println!("Coordinates ({x}, {y}) are already used by piece {}. Please try again.", piece_at_pos.unwrap());
+                                    continue
+                                }
+
+                                return (x, y);
+                            },
+                            Err(_) => {
+                                println!("Error parsing y. Please try again.");
+                                continue
+                            },
+                        },
+                        Err(_) => {
+                            println!("Error parsing x. Please try again.");
+                            continue
+                        },
+                    }
+                }
+                Err(_) => {
+                    println!("Error parsing input. Please try again.");
+                    continue
+                },
             }
         }
-        0
     }
 }
