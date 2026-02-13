@@ -60,6 +60,30 @@ impl Board {
 
         true
     }
+
+    pub fn is_win(&self, x: usize, y: usize) -> bool {
+        if self.is_win_axis(0, y, 1, 0) {
+            return true;
+        }
+
+        if self.is_win_axis(x, 0, 0, 1) {
+            return true;
+        }
+
+        if x == y {
+            if self.is_win_axis(0, 0, 1, 1) {
+                return true;
+            }
+        }
+
+        if x + y == 3 {
+            if self.is_win_axis(3, 0, -1, 1) {
+                return true;
+            }
+        }
+
+        false
+    }
 }
 
 #[cfg(test)]
