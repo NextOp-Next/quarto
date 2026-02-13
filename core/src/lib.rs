@@ -1,5 +1,5 @@
 #[derive(Debug, Clone, Copy)]
-pub struct Piece(u8);
+pub struct Piece(pub u8);
 
 impl Piece {
     pub fn new(bright: bool, square: bool, tall: bool, hollow: bool) -> Self {
@@ -35,7 +35,7 @@ impl From<u8> for Piece {
     }
 }
 
-pub struct Board([[Option<Piece>; 4]; 4]);
+pub struct Board(pub [[Option<Piece>; 4]; 4]);
 
 impl Board {
     pub fn new() -> Self {
@@ -51,7 +51,7 @@ impl Board {
     }
 }
 
-pub struct Stack([Option<Piece>; 16]);
+pub struct Stack(pub [Option<Piece>; 16]);
 
 impl Stack {
     pub fn new() -> Self {
