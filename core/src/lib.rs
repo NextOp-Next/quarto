@@ -94,3 +94,8 @@ impl Stack {
         Some(piece)
     }
 }
+
+pub struct Game {
+    pub board: Board,
+    pub stack: Stack,
+}
