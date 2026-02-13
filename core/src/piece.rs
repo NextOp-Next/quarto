@@ -48,3 +48,16 @@ impl std::fmt::Display for Piece {
         Ok(())
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_from_u8() {
+        assert_eq!(Piece::from(0b0000), Piece::new(false, false, false, false));
+        assert_eq!(Piece::from(0b1111), Piece::new(true, true, true, true));
+        assert_eq!(Piece::from(0b1100), Piece::new(false, false, true, true));
+        assert_eq!(Piece::from(0b1011), Piece::new(true, true, false, true));
+    }
+}
