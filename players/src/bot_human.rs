@@ -1,6 +1,6 @@
-use std::io::{Read, stdin};
+use std::io::stdin;
 
-use quarto_core::{Board, Piece};
+use quarto_core::{Board, Piece, Stack};
 
 use crate::ordi::Player;
 
@@ -9,7 +9,7 @@ pub struct Human {
 }
 
 impl Player for Human {
-    fn give_piece_to_other_player(&mut self, board: &Board) -> Piece {
+    fn give_piece_to_other_player(&mut self, board: &Board, stack: &Stack) -> Piece {
         loop {
             self.buff.clear();
             let success = stdin().read_line(&mut self.buff);
@@ -19,6 +19,75 @@ impl Player for Human {
                         println!("Type the piece you wish to give your opponent, represented by a 4 character long input.\nFormat :\nt/s (tall / small)\nb/w (black / white)\nh/f (hollow / full)\ns/c (square / circle)\n\nExample : tbhs, wsfs.\n");
                         continue
                     }
+
+                    let array = self.buff.as_bytes();
+
+                    let tall = match array[0] {
+                        b't' => {
+                            true
+                        }
+                        b's' => {
+                            false
+                        }
+                        other => {
+                            println!("Invalid height input \"{}\".", other as char);
+                            continue
+                        }
+                    };
+
+                    let bright = match array[1] {
+                        b'w' => {
+                            true
+                        }
+                        b'b' => {
+                            false
+                        }
+                        other => {
+                            println!("Invalid color input \"{}\".", other as char);
+                            continue
+                        }
+                    };
+
+                    let hollow = match array[2] {
+                        b'h' => {
+                            true
+                        }
+                        b'f' => {
+                            false
+                        }
+                        other => {
+                            println!("Invalid hollowness input \"{}\".", other as char);
+                            continue
+                        }
+                    };
+
+                    let square = match array[3] {
+                        b's' => {
+                            true
+                        }
+                        b'c' => {
+                            false
+                        }
+                        other => {
+                            println!("Invalid shape input \"{}\".", other as char);
+                            continue
+                        }
+                    };
+
+                    let piece = Piece::new(bright, square, tall, hollow);
+
+                    for x in 1..4 {
+                        for y in 1..4 {
+                            if let Some(board_piece) = board.get_piece(x, y) {
+                                if board_piece == piece {
+                                    println!("Piece \"{piece}\" is already on the board at coordinates ({x}, {y}).");
+                                    continue
+                                }
+                            }
+                        }
+                    }
+
+                    return piece
                 },
                 Err(_) => continue,
             }
