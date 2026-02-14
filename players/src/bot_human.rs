@@ -9,7 +9,7 @@ pub struct Human {
 }
 
 impl Player for Human {
-    fn give_piece_to_other_player(&mut self, board: &Board, stack: &Stack) -> Piece {
+    fn give_piece_to_other_player(&mut self, board: &Board, _stack: &Stack) -> Piece {
         println!("Type the piece you wish to give your opponent.");
         loop {
             self.buff.clear();
@@ -17,61 +17,59 @@ impl Player for Human {
             match success {
                 Ok(_) => {
                     if self.buff == "help" {
-                        println!("Type the piece you wish to give your opponent, represented by a 4 character long input.\nFormat :\nt/s (tall / small)\nb/w (black / white)\nh/f (hollow / full)\ns/c (square / circle)\n\nExample : tbhs, wsfs.\n");
-                        continue
+                        println!(
+                            "Type the piece you wish to give your opponent, represented by a 4 character long input.\nFormat :\nt/s (tall / small)\nb/w (black / white)\nh/f (hollow / full)\ns/c (square / circle)\n\nExample : tbhs, wsfs.\n"
+                        );
+                        continue;
                     }
 
                     let array = self.buff.as_bytes();
 
                     let tall = match array[0] {
-                        b't' => {
-                            true
-                        }
-                        b's' => {
-                            false
-                        }
+                        b't' => true,
+                        b's' => false,
                         other => {
-                            println!("Invalid height input \"{}\". Please try again.", other as char);
-                            continue
+                            println!(
+                                "Invalid height input \"{}\". Please try again.",
+                                other as char
+                            );
+                            continue;
                         }
                     };
 
                     let bright = match array[1] {
-                        b'w' => {
-                            true
-                        }
-                        b'b' => {
-                            false
-                        }
+                        b'w' => true,
+                        b'b' => false,
                         other => {
-                            println!("Invalid color input \"{}\". Please try again.", other as char);
-                            continue
+                            println!(
+                                "Invalid color input \"{}\". Please try again.",
+                                other as char
+                            );
+                            continue;
                         }
                     };
 
                     let hollow = match array[2] {
-                        b'h' => {
-                            true
-                        }
-                        b'f' => {
-                            false
-                        }
+                        b'h' => true,
+                        b'f' => false,
                         other => {
-                            println!("Invalid hollowness input \"{}\". Please try again.", other as char);
-                            continue
+                            println!(
+                                "Invalid hollowness input \"{}\". Please try again.",
+                                other as char
+                            );
+                            continue;
                         }
                     };
 
                     let square = match array[3] {
-                        b's' => {
-                            true
-                        }
-                        b'c' => {
-                            false
-                        }
+                        b's' => true,
+                        b'c' => false,
                         other => {
-                            println!("Invalid shape input \"{}\". Please try again.", other as char);
-                            continue
+                            println!(
+                                "Invalid shape input \"{}\". Please try again.",
+                                other as char
+                            );
+                            continue;
                         }
                     };
 
@@ -79,21 +77,23 @@ impl Player for Human {
 
                     for x in 0..4 {
                         for y in 0..4 {
-                            if let Some(board_piece) = board.get_piece(x, y) {
-                                if board_piece == piece {
-                                    println!("Piece \"{piece}\" is already on the board at coordinates ({x}, {y}).");
-                                    continue
-                                }
+                            if let Some(board_piece) = board.get_piece(x, y)
+                                && board_piece == piece
+                            {
+                                println!(
+                                    "Piece \"{piece}\" is already on the board at coordinates ({x}, {y})."
+                                );
+                                continue;
                             }
                         }
                     }
 
-                    return piece
-                },
+                    return piece;
+                }
                 Err(_) => {
                     println!("Error parsing input. Please try again.");
-                    continue
-                },
+                    continue;
+                }
             }
         }
     }
@@ -107,7 +107,7 @@ impl Player for Human {
                 Ok(_) => {
                     if self.buff == "help" {
                         println!("Coordinates are in the x,y or x, y format.\n");
-                        continue
+                        continue;
                     }
 
                     let x_res = self.buff[..=1].parse::<usize>();
@@ -117,33 +117,38 @@ impl Player for Human {
                         Ok(x) => match y_res {
                             Ok(y) => {
                                 if x >= 4 || y >= 4 {
-                                    println!("Coordinates ({x}, {y}) are out of bounds. Please try again.");
-                                    continue
+                                    println!(
+                                        "Coordinates ({x}, {y}) are out of bounds. Please try again."
+                                    );
+                                    continue;
                                 }
 
                                 let piece_at_pos = board.get_piece(x, y);
-                                if piece_at_pos.is_some() {
-                                    println!("Coordinates ({x}, {y}) are already used by piece {}. Please try again.", piece_at_pos.unwrap());
-                                    continue
+                                if let Some(piece_at_pos) = piece_at_pos {
+                                    println!(
+                                        "Coordinates ({x}, {y}) are already used by piece {}. Please try again.",
+                                        piece_at_pos
+                                    );
+                                    continue;
                                 }
 
                                 return (x, y);
-                            },
+                            }
                             Err(_) => {
                                 println!("Error parsing y. Please try again.");
-                                continue
-                            },
+                                continue;
+                            }
                         },
                         Err(_) => {
                             println!("Error parsing x. Please try again.");
-                            continue
-                        },
+                            continue;
+                        }
                     }
                 }
                 Err(_) => {
                     println!("Error parsing input. Please try again.");
-                    continue
-                },
+                    continue;
+                }
             }
         }
     }
