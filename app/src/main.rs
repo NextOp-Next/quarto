@@ -78,7 +78,21 @@ pub fn main() {
 
     let mut players: [Box<dyn Player>; 2] = [Box::new(p1), Box::new(p2)];
 
-    match game_loop(&mut players) {
+    let mut game = Game {
+        board: Board::new(),
+        stack: Stack::new(),
+    };
+
+    let outcome = 'outer: loop {
+        for i in 0..PLAYER_COUNT {
+            println!("player {i}'s pick");
+            if let Some(outcome) = game_iter(&mut game, i, &mut players) {
+                break 'outer outcome;
+            }
+        }
+    };
+
+    match outcome {
         Outcome::Win(i) => println!("player {i} won"),
         Outcome::Draw => println!("draw"),
         Outcome::Illegal(i) => println!("player {i} attempted illegal move"),
