@@ -7,7 +7,7 @@ impl Stack {
         let mut arr = [None; 16];
 
         for (i, item) in arr.iter_mut().enumerate() {
-            *item = Some((i as u8).into());
+            *item = Some(Piece(i as u8));
         }
 
         Stack(arr)
