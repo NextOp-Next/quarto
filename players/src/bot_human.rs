@@ -20,16 +20,17 @@ impl Player for Human {
         loop {
             self.buff.clear();
             let success = stdin().read_line(&mut self.buff);
+            let slice = self.buff.trim_end();
             match success {
                 Ok(_) => {
-                    if self.buff == "help" {
+                    if slice == "help" {
                         println!(
                             "Type the piece you wish to give your opponent, represented by a 4 character long input.\nFormat :\nt/s (tall / small)\nb/w (black / white)\nh/f (hollow / full)\ns/c (square / circle)\n\nExample : tbhs, wsfs.\n"
                         );
                         continue;
                     }
 
-                    let array = self.buff.as_bytes();
+                    let array = slice.as_bytes();
 
                     let tall = match array[0] {
                         b't' => true,
@@ -100,15 +101,16 @@ impl Player for Human {
         loop {
             self.buff.clear();
             let success = stdin().read_line(&mut self.buff);
+            let slice = self.buff.trim_end();
             match success {
                 Ok(_) => {
-                    if self.buff == "help" {
+                    if slice == "help" {
                         println!("Coordinates are in the x,y or x, y format.\n");
                         continue;
                     }
 
-                    let x_res = self.buff[..=1].parse::<usize>();
-                    let y_res = self.buff[2..].parse::<usize>();
+                    let x_res = slice[0..1].parse::<usize>();
+                    let y_res = slice[2..].parse::<usize>();
 
                     match x_res {
                         Ok(x) => match y_res {
