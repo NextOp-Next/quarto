@@ -6,8 +6,8 @@ impl Stack {
     pub fn new() -> Self {
         let mut arr = [None; 16];
 
-        for i in 0..16 {
-            arr[i] = Some((i as u8).into());
+        for (i, item) in arr.iter_mut().enumerate() {
+            *item = Some((i as u8).into());
         }
 
         Stack(arr)
@@ -27,5 +27,11 @@ impl Stack {
 
         self.0[i] = None;
         Some(piece)
+    }
+}
+
+impl Default for Stack {
+    fn default() -> Self {
+        Self::new()
     }
 }

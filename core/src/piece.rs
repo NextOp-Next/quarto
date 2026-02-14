@@ -41,8 +41,10 @@ impl std::fmt::Display for Piece {
         f.write_str(if self.is_hollow() { "h" } else { "f" })?;
         f.write_str(if self.is_square() {
             if self.is_bright() { "■" } else { "□" }
+        } else if self.is_bright() {
+            "●"
         } else {
-            if self.is_bright() { "●" } else { "○" }
+            "○"
         })?;
 
         Ok(())

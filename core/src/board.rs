@@ -70,19 +70,21 @@ impl Board {
             return true;
         }
 
-        if x == y {
-            if self.is_win_axis(0, 0, 1, 1) {
-                return true;
-            }
+        if x == y && self.is_win_axis(0, 0, 1, 1) {
+            return true;
         }
 
-        if x + y == 3 {
-            if self.is_win_axis(3, 0, -1, 1) {
-                return true;
-            }
+        if x + y == 3 && self.is_win_axis(3, 0, -1, 1) {
+            return true;
         }
 
         false
+    }
+}
+
+impl Default for Board {
+    fn default() -> Self {
+        Self::new()
     }
 }
 
