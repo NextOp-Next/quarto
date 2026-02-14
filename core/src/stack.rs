@@ -12,7 +12,7 @@ impl Stack {
             return false;
         }
 
-        let bit = 2_u16.pow(piece.0 as u32);
+        let bit = 1 << piece.0;
         (self.0 & bit) == bit
     }
 
@@ -21,7 +21,7 @@ impl Stack {
             return;
         }
 
-        let bit = 2_u16.pow(piece.0 as u32);
+        let bit = 1 << piece.0;
         self.0 &= !bit;
     }
 }
