@@ -1,4 +1,5 @@
 pub mod bot_human;
+pub mod random;
 
 use quarto_core::{Game, Piece};
 

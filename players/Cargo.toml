@@ -5,3 +5,5 @@ edition = "2024"
 
 [dependencies]
 quarto-core = { path = "../core" }
+
+rand = "0.10.0"
