@@ -1,4 +1,4 @@
-use quarto_core::{Board, Game, Stack};
+use quarto_core::{Board, Game, Piece, Stack};
 use quarto_players::Player;
 
 const PLAYER_COUNT: usize = 2;
@@ -15,16 +15,16 @@ pub fn game_iter(
     players: &mut [Box<dyn Player>; PLAYER_COUNT],
 ) -> Option<Outcome> {
     let current_player = players.get_mut(player_idx).unwrap();
-    let piece_idx = current_player.give_piece(game);
+    let piece = current_player.give_piece(game);
 
-    if !game.stack.0.iter().any(|p| p.is_some()) {
+    if game.stack.0 == 0 {
         return Some(Outcome::Draw);
     }
 
-    let piece = match game.stack.pick(piece_idx) {
-        Some(piece) => piece,
-        None => return Some(Outcome::Illegal(player_idx)),
-    };
+    if !game.stack.has(piece) {
+        return Some(Outcome::Illegal(player_idx));
+    }
+    game.stack.pick(piece);
 
     let next_idx = (player_idx + 1) % PLAYER_COUNT;
     let next_player = players.get_mut(next_idx).unwrap();
@@ -62,10 +62,8 @@ pub fn game_loop(players: &mut [Box<dyn Player>; 2]) -> Outcome {
 pub fn main() {
     println!("hello, world!");
 
-    let stack = Stack::new();
-
-    for piece in stack.0 {
-        let piece = piece.unwrap();
+    for piece in 0..16 {
+        let piece = Piece(piece as u8);
         println!(
             "{}: bright = {}, square = {}, tall = {}, hollow = {}",
             piece,
