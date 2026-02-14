@@ -14,12 +14,12 @@ pub fn game_iter(
     player_idx: usize,
     players: &mut [Box<dyn Player>; PLAYER_COUNT],
 ) -> Option<Outcome> {
-    let current_player = players.get_mut(player_idx).unwrap();
-    let piece = current_player.give_piece(game);
-
     if game.stack.0 == 0 {
         return Some(Outcome::Draw);
     }
+
+    let current_player = players.get_mut(player_idx).unwrap();
+    let piece = current_player.give_piece(game);
 
     if !game.stack.pick(piece) {
         return Some(Outcome::Illegal(player_idx));
