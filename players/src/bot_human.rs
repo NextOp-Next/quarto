@@ -8,6 +8,12 @@ pub struct Human {
     buff: String,
 }
 
+impl Human {
+    pub fn new(buff: String) -> Self {
+        Self { buff }
+    }
+}
+
 impl Player for Human {
     fn give_piece(&mut self, game: &Game) -> Piece {
         println!("Type the piece you wish to give your opponent.");
