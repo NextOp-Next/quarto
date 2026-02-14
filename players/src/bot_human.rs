@@ -1,6 +1,6 @@
 use std::io::stdin;
 
-use quarto_core::{Board, Piece, Stack};
+use quarto_core::{Game, Piece};
 
 use crate::ordi::Player;
 
@@ -9,7 +9,7 @@ pub struct Human {
 }
 
 impl Player for Human {
-    fn give_piece_to_other_player(&mut self, board: &Board, _stack: &Stack) -> Piece {
+    fn give_piece_to_other_player(&mut self, game: &Game) -> usize {
         println!("Type the piece you wish to give your opponent.");
         loop {
             self.buff.clear();
@@ -74,21 +74,22 @@ impl Player for Human {
                     };
 
                     let piece = Piece::new(bright, square, tall, hollow);
-
-                    for x in 0..4 {
-                        for y in 0..4 {
-                            if let Some(board_piece) = board.get_piece(x, y)
-                                && board_piece == piece
-                            {
-                                println!(
-                                    "Piece \"{piece}\" is already on the board at coordinates ({x}, {y})."
-                                );
-                                continue;
-                            }
+                    let piece_idx = match game
+                        .stack
+                        .0
+                        .iter()
+                        .enumerate()
+                        .find(|(_, p)| Some(piece) == **p)
+                        .map(|(i, _)| i)
+                    {
+                        Some(i) => i,
+                        None => {
+                            println!("Piece \"{piece}\" is missing from the stack.");
+                            continue;
                         }
-                    }
+                    };
 
-                    return piece;
+                    return piece_idx;
                 }
                 Err(_) => {
                     println!("Error parsing input. Please try again.");
@@ -98,7 +99,7 @@ impl Player for Human {
         }
     }
 
-    fn play_piece(&mut self, board: &Board, given_piece: &Piece) -> (usize, usize) {
+    fn play_piece(&mut self, game: &Game, given_piece: Piece) -> (usize, usize) {
         println!("Type the coordinates you wish to place your piece ({given_piece}) in.");
         loop {
             self.buff.clear();
@@ -123,7 +124,7 @@ impl Player for Human {
                                     continue;
                                 }
 
-                                let piece_at_pos = board.get_piece(x, y);
+                                let piece_at_pos = game.board.get_piece(x, y);
                                 if let Some(piece_at_pos) = piece_at_pos {
                                     println!(
                                         "Coordinates ({x}, {y}) are already used by piece {}. Please try again.",

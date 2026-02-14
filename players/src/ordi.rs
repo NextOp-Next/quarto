@@ -1,6 +1,6 @@
-use quarto_core::{Board, Piece, Stack};
+use quarto_core::{Game, Piece};
 
 pub trait Player {
-    fn give_piece_to_other_player(&mut self, board: &Board, stack: &Stack) -> Piece;
-    fn play_piece(&mut self, board: &Board, given_piece: &Piece) -> (usize, usize);
+    fn give_piece_to_other_player(&mut self, game: &Game) -> usize;
+    fn play_piece(&mut self, game: &Game, given_piece: Piece) -> (usize, usize);
 }
