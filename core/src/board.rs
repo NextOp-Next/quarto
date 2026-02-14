@@ -32,7 +32,7 @@ impl Board {
         };
     }
 
-    /// Checks for a win condition given starting coordinates (sx, sy) and direction (mx, my)
+    /// Checks for a win condition given starting coordinates (sx, sy) and direction (mx, my).
     fn is_win_axis(&self, sx: usize, sy: usize, mx: isize, my: isize) -> bool {
         let mut x: isize = sx as isize;
         let mut y: isize = sy as isize;

@@ -9,7 +9,7 @@ pub enum Outcome {
     Illegal(usize),
 }
 
-/// Play a single move. Returns the game end state (if any)
+/// Play a single move. Returns the game end state (if any).
 pub fn game_iter(
     game: &mut Game,
     giving_player_id: usize,
